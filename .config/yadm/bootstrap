@@ -1,0 +1,6 @@
+echo "Installing Antidote plugin manager..."
+mkdir -p ~/.config/zsh
+git clone https://github.com/mattmc3/antidote ~/.config/zsh/.antidote
+
+echo "Installing Starship..."
+curl -sS https://starship.rs/install.sh | sh -s -- -y
