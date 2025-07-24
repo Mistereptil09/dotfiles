@@ -1,0 +1,15 @@
+# ─── Core Completions & Syntax ────────────────────────────────────────────────
+zsh-users/zsh-completions
+
+# ─── Enhanced Navigation ──────────────────────────────────────────────────────
+Aloxaf/fzf-tab
+
+# ─── History & Suggestions ────────────────────────────────────────────────────
+zsh-users/zsh-history-substring-search
+zsh-users/zsh-autosuggestions
+
+# ─── Productivity ─────────────────────────────────────────────────────────────
+MichaelAquilina/zsh-you-should-use
+
+# ─── Syntax Highlighting ─────────────────────────────────────
+zsh-users/zsh-syntax-highlighting
