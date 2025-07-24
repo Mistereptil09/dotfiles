@@ -15,17 +15,16 @@ $fill\
 [░▒▓](fg:#1d2230 bg:#16181d)\
 $cmd_duration\
 $hostname\
-$localip\
 $username\
 $sudo\
 $jobs\
 $shell\
 $env_var\
 $shlvl\
-$battery\
 $status\
 $os\
 $time\
+$battery\	
 [](fg:#394260 bg:#16181d)\
 $git_branch\
 $git_status\
@@ -84,7 +83,6 @@ $container\
 
 [fill]
 symbol = ' '
-
 [character]
 format = "$symbol "
 success_symbol = "[❯](bold italic bright-yellow)"
@@ -439,7 +437,8 @@ style = "bg:#16181d"
 symbol = ""
 
 [shell]
-format = "[[ $indicator ](fg:#8a8eab bg:#16181d)]($style)"
+format = "[[  $indicator ](fg:#8a8eab bg:#16181d)]($style)"
+# format = "[  $indicator ](fg:#8a8eab bg:#1c1f26)"
 style = "bg:#16181d"
 disabled = false
 
@@ -459,6 +458,8 @@ charging_symbol = " "
 discharging_symbol = " "
 unknown_symbol = "?"
 empty_symbol = " "
+format = "[ $symbol$percentage ]($style)"
+# format = "[ $symbol$percentage ](fg:#ffd93d bg:#394260)"
 
 [[battery.display]]
 threshold = 20
@@ -469,7 +470,7 @@ threshold = 60
 style = "fg:#ffd93d bg:#16181d"
 
 [[battery.display]]
-threshold = 100
+threshold = 101
 style = "fg:#8a8eab bg:#16181d"
 
 
@@ -480,6 +481,7 @@ disabled = false
 
 [os]
 format = "[[ $name ](fg:#8a8eab bg:#16181d)]($style)"
+# format = "[ $name ](fg:#8a8eab bg:#212736)"
 style = "bg:#16181d"
 disabled = false
 
@@ -487,4 +489,5 @@ disabled = false
 disabled = false
 time_format = "%R"
 style = "bg:#16181d"
-format = '[[  $time ](fg:#8a8eab bg:#16181d)]($style)'
+format = '[[  $time ](fg:#8a8eab bg:#16181d)]($style)'
+# format = "[  $time ](fg:#8a8eab bg:#2a2f3a)"
