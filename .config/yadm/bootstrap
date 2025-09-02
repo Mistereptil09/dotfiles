@@ -1,14 +1,40 @@
-echo "This install file is expected to be used on a fedora linux distro."
+#!/bin/bash
 
-echo "installing Kitty terminal..."
-sudo dnf install kitty
+echo "This install file is expected to be used on a Fedora Linux distro."
 
-echo "Installing zsh..."
-sudo dnf install zsh
+# Install Kitty terminal
+echo "Installing Kitty terminal..."
+sudo dnf install kitty -y
 
+# Install Zsh
+echo "Installing Zsh..."
+sudo dnf install zsh -y
+
+# Install Antidote plugin manager
 echo "Installing Antidote plugin manager..."
 mkdir -p ~/.config/zsh
 git clone https://github.com/mattmc3/antidote ~/.config/zsh/.antidote
 
+# Install Starship
 echo "Installing Starship..."
 curl -sS https://starship.rs/install.sh | sh -s -- -y
+
+# Clone dotfiles repository
+echo "Cloning dotfiles repository..."
+git clone https://github.com/Mistereptil09/dotfiles.git ~/dotfiles
+
+# Set Zsh as the default shell
+echo "Setting Zsh as the default shell..."
+chsh -s $(which zsh)
+
+# Initialize Antidote in Zsh
+echo "Initializing Antidote in Zsh..."
+echo 'source ~/.config/zsh/.antidote/antidote.zsh' >> ~/.zshrc
+echo 'antidote load' >> ~/.zshrc
+
+# Symlink dotfiles
+echo "Symlinking dotfiles..."
+ln -sf ~/dotfiles/.config ~/.config
+ln -sf ~/dotfiles/.zshenv ~/.zshenv
+
+echo "Installation complete! Please restart your terminal or log out and back in."
