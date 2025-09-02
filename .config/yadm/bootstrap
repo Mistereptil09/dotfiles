@@ -15,9 +15,14 @@ echo "Installing Antidote plugin manager..."
 mkdir -p ~/.config/zsh
 git clone https://github.com/mattmc3/antidote ~/.config/zsh/.antidote
 
+# Install tar for decompressing Starship file
+echo "Installing tar"
+sudo dnf install tar
+
 # Install Starship
 echo "Installing Starship..."
 curl -sS https://starship.rs/install.sh | sh -s -- -y
+
 
 # Clone dotfiles repository
 echo "Cloning dotfiles repository..."
