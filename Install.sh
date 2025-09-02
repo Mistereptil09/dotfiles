@@ -8,11 +8,8 @@ echo "📦 Checking for yadm..."
 if ! command -v yadm &>/dev/null; then
     echo "➡️ Installing yadm..."
     if command -v dnf &>/dev/null; then
+        dnf config-manager addrepo --from-repofile=https://download.opensuse.org/repositories/home:TheLocehiliosan:yadm/Fedora_Rawhide/home:TheLocehiliosan:yadm.repo
         sudo dnf install -y yadm
-    elif command -v apt &>/dev/null; then
-        sudo apt update && sudo apt install -y yadm
-    elif command -v pacman &>/dev/null; then
-        sudo pacman -S --noconfirm yadm
     else
         echo "❌ Package manager not supported. Please install yadm manually."
         exit 1
