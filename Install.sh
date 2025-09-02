@@ -8,7 +8,7 @@ echo "📦 Checking for yadm..."
 if ! command -v yadm &>/dev/null; then
     echo "➡️ Installing yadm..."
     if command -v dnf &>/dev/null; then
-        TMPDIR=/tmp  dnf config-manager addrepo --from-repofile=https://download.opensuse.org/repositories/home:TheLocehiliosan:yadm/Fedora_42/home:TheLocehiliosan:yadm.repo
+        TMPDIR=/tmp sudo dnf config-manager addrepo --from-repofile=https://download.opensuse.org/repositories/home:TheLocehiliosan:yadm/Fedora_42/home:TheLocehiliosan:yadm.repo
         sudo dnf install -y yadm
     else
         echo "❌ Package manager not supported. Please install yadm manually."
