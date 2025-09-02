@@ -23,14 +23,14 @@ Personal dotfiles repository for Fedora, including Zsh, Kitty, and yadm bootstra
 Run this if you trust the script and want a fast setup:
 
 ```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/Mistereptil09/dotfiles/Install.sh)
+bash <(curl -fsSL https://raw.githubusercontent.com/Mistereptil09/dotfiles/main/Install.sh)
 ```
 
 ---
 ## 🛠 Manual Install (Download first)
 if you want to inspect or edit the installer first :
 ```bash
-curl -o Install.sh https://raw.githubusercontent.com/Mistereptil09/dotfiles/Install.sh
+curl -o Install.sh https://raw.githubusercontent.com/Mistereptil09/dotfiles/main/Install.sh
 chmod +x Install.sh
 ./Install.sh
 ```
