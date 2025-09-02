@@ -1,3 +1,11 @@
+echo "This install file is expected to be used on a fedora linux distro."
+
+echo "installing Kitty terminal..."
+sudo dnf install kitty
+
+echo "Installing zsh..."
+sudo dnf install zsh
+
 echo "Installing Antidote plugin manager..."
 mkdir -p ~/.config/zsh
 git clone https://github.com/mattmc3/antidote ~/.config/zsh/.antidote
