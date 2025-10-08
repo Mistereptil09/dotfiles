@@ -34,7 +34,7 @@ print_error() {
 # Welcome message
 echo -e "\n${GREEN}╔══════════════════════════════════════════════════════════════╗${NC}"
 echo -e "${GREEN}║                 Fedora Bootstrap Script                      ║${NC}"
-echo -e "${GREEN}║        Minimal Hyprland setup with GPU detection            ║${NC}"
+echo -e "${GREEN}║        Minimal Hyprland setup with GPU detection             ║${NC}"
 echo -e "${GREEN}╚══════════════════════════════════════════════════════════════╝${NC}"
 print_info "This script will install and configure:"
 print_info "  • Essential system utilities"
@@ -83,7 +83,8 @@ print_success "Hyprland installed successfully"
 
 # Install terminal and browser
 print_step "Installing terminal emulator and web browser..."
-sudo dnf install -y kitty firefox
+sudo dnf install -y kitty
+sudo dnf install -y firefox
 print_success "Kitty terminal and Firefox browser installed"
 
 # Install Zsh
@@ -124,7 +125,7 @@ fi
 
 # Final message
 echo -e "\n${GREEN}╔══════════════════════════════════════════════════════════════╗${NC}"
-echo -e "${GREEN}║                   Installation Complete!                    ║${NC}"
+echo -e "${GREEN}║                   Installation Complete!                     ║${NC}"
 echo -e "${GREEN}╚══════════════════════════════════════════════════════════════╝${NC}"
 echo
 print_success "Your minimal Fedora Hyprland system has been configured with:"
