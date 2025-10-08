@@ -38,8 +38,9 @@ echo -e "${GREEN}║        Minimal Hyprland setup with GPU detection           
 echo -e "${GREEN}╚══════════════════════════════════════════════════════════════╝${NC}"
 print_info "This script will install and configure:"
 print_info "  • Essential system utilities"
-print_info "  • GPU-specific drivers (auto-detected)"
-print_info "  • Hyprland wayland compositor (minimal setup)"
+print_info "  • Newer version of system utilities (zoxide, bat, ripgrep)"
+# print_info "  • GPU-specific drivers (auto-detected)"
+# print_info "  • Hyprland wayland compositor (minimal setup)"
 print_info "  • Kitty terminal and Firefox browser"
 print_info "  • Zsh shell with Starship prompt"
 print_info "  • Display manager configuration"
@@ -55,31 +56,35 @@ print_step "Installing essential utilities..."
 sudo dnf install -y git curl tar unzip wget zsh sudo
 print_success "Essential utilities installed"
 
-# Detect GPU and install drivers
-print_step "Detecting GPU hardware and installing drivers..."
-GPU_VENDOR=$(lspci | grep -E "VGA|3D" | awk '{print tolower($5)}' | head -n1)
+# Install Newer version of system utilities
+print_step "Newer version of system utilities..."
+sudo dnf install zoxide eza bat tmux
 
-if [[ "$GPU_VENDOR" == *nvidia* ]]; then
-    print_info "NVIDIA GPU detected - installing NVIDIA drivers..."
-    sudo dnf install -y akmod-nvidia xorg-x11-drv-nvidia
-    print_success "NVIDIA drivers installed"
-elif [[ "$GPU_VENDOR" == *amd* ]]; then
-    print_info "AMD GPU detected - installing AMD drivers..."
-    sudo dnf install -y xorg-x11-drv-amdgpu mesa-vulkan-drivers
-    print_success "AMD drivers installed"
-elif [[ "$GPU_VENDOR" == *intel* ]]; then
-    print_info "Intel GPU detected - installing Intel drivers..."
-    sudo dnf install -y xorg-x11-drv-intel mesa-vulkan-drivers
-    print_success "Intel drivers installed"
-else
-    print_info "No supported GPU detected, skipping driver installation"
-fi
+# Detect GPU and install drivers
+# print_step "Detecting GPU hardware and installing drivers..."
+# GPU_VENDOR=$(lspci | grep -E "VGA|3D" | awk '{print tolower($5)}' | head -n1)
+# 
+# if [[ "$GPU_VENDOR" == *nvidia* ]]; then
+#     print_info "NVIDIA GPU detected - installing NVIDIA drivers..."
+#     sudo dnf install -y akmod-nvidia xorg-x11-drv-nvidia
+#     print_success "NVIDIA drivers installed"
+# elif [[ "$GPU_VENDOR" == *amd* ]]; then
+#     print_info "AMD GPU detected - installing AMD drivers..."
+#     sudo dnf install -y xorg-x11-drv-amdgpu mesa-vulkan-drivers
+#     print_success "AMD drivers installed"
+# elif [[ "$GPU_VENDOR" == *intel* ]]; then
+#     print_info "Intel GPU detected - installing Intel drivers..."
+#     sudo dnf install -y xorg-x11-drv-intel mesa-vulkan-drivers
+#     print_success "Intel drivers installed"
+# else
+#     print_info "No supported GPU detected, skipping driver installation"
+# fi
 
 # Install minimal Hyprland setup
-print_step "Installing Hyprland wayland compositor..."
-print_info "Installing minimal Hyprland with essential dependencies..."
-sudo dnf install -y hyprland xdg-desktop-portal-hyprland
-print_success "Hyprland installed successfully"
+# print_step "Installing Hyprland wayland compositor..."
+# print_info "Installing minimal Hyprland with essential dependencies..."
+# sudo dnf install -y hyprland xdg-desktop-portal-hyprland
+# print_success "Hyprland installed successfully"
 
 # Install terminal and browser
 print_step "Installing terminal emulator and web browser..."
@@ -91,6 +96,9 @@ print_success "Kitty terminal and Firefox browser installed"
 print_step "Installing Zsh shell..."
 sudo dnf install -y zsh
 print_success "Zsh shell installed"
+print_step "Installing antidote plugin manager"
+git clone --depth=1 https://github.com/mattmc3/antidote.git ${ZDOTDIR:-~}/.antidote
+print_succes "Antidote installed"
 
 # Install Starship prompt
 print_step "Installing Starship prompt..."
