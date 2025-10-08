@@ -58,7 +58,7 @@ print_success "Essential utilities installed"
 
 # Install Newer version of system utilities
 print_step "Newer version of system utilities..."
-sudo dnf install zoxide eza bat tmux
+sudo dnf install -y zoxide eza bat tmux
 
 # Detect GPU and install drivers
 # print_step "Detecting GPU hardware and installing drivers..."
