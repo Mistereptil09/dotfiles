@@ -25,9 +25,18 @@ case "$OS_NAME" in
         sudo pacman -S --noconfirm zsh git curl
         ;;
     *)
-        echo "⚠️  Unknown distribution. Please install zsh, git, and curl manually."
+        echo "⚠️  Unknown distribution ($OS_NAME)."
+        echo "Please install zsh, git, and curl manually before continuing."
+        echo "Then run this script again."
+        exit 1
         ;;
 esac
+
+# Verify essential packages are installed
+if ! command -v zsh &>/dev/null; then
+    echo "❌ Error: zsh is not installed. Please install it manually."
+    exit 1
+fi
 
 echo "📦 Checking for chezmoi..."
 if ! command -v chezmoi &>/dev/null; then
