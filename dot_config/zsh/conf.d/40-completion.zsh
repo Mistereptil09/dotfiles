@@ -14,7 +14,7 @@ ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 ZSH_YOU_SHOULD_USE_EXCLUDE=('ls' 'cd')
 ZSH_YOU_SHOULD_USE_HOOKED_COMMANDS=('git')
 
-# fzf‑tab Configuration
+# fzf-tab Configuration
 zstyle ':fzf-tab:*' popup-min-size 50 8
 zstyle ':fzf-tab:*' fzf-default-opts "${FZF_DEFAULT_OPTS}"
 

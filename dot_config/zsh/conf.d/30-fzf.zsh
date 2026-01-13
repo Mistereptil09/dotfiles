@@ -15,21 +15,21 @@ export FZF_DEFAULT_OPTS="
   --color=info:#83a598,prompt:#bdae93,spinner:#fabd2f,pointer:#83a598,marker:#fe8019,header:#665c54
 "
 
-# CTRL-R: fuzzy‑search history with preview toggle
+# CTRL-R: fuzzy-search history with preview toggle
 export FZF_CTRL_R_OPTS="
   --preview 'echo {}' --preview-window=up:3:hidden:wrap \
   --bind 'ctrl-/:toggle-preview' --color header:italic \
   --header 'Press CTRL-/ to toggle preview.'
 "
 
-# CTRL-T: fuzzy‑find files & dirs with bat preview & skip except folder
+# CTRL-T: fuzzy-find files & dirs with bat preview & skip except folder
 export FZF_CTRL_T_COMMAND="fd --type f"
 export FZF_CTRL_T_OPTS="
   --preview 'bat --style=numbers --color=always {}' \
   --bind 'ctrl-/:change-preview-window(down|hidden|)'
 "
 
-# ALT-C: fuzzy‑cd using fd
+# ALT-C: fuzzy-cd using fd
 export FZF_ALT_C_COMMAND="fd --type directory"
 export FZF_ALT_C_OPTS="
   --preview 'eza -l --icons {}/ | head -20' --bind 'ctrl-/:toggle-preview'
