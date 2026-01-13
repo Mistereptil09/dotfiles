@@ -3,6 +3,23 @@ set -e  # exit on error
 
 REPO_URL="https://github.com/Mistereptil09/dotfiles.git"
 
+# Check if running inside Flatpak
+if [[ -n "$FLATPAK_ID" ]] || [[ "$HOME" == *"/.var/app/"* ]]; then
+    echo "⚠️  WARNING: This script appears to be running inside a Flatpak application."
+    echo "Dotfiles installed from within Flatpak will only affect the Flatpak's isolated environment."
+    echo ""
+    echo "To install dotfiles for your system:"
+    echo "  1. Exit the Flatpak application"
+    echo "  2. Open a regular terminal (not from Flatpak)"
+    echo "  3. Run this script again from there"
+    echo ""
+    read -p "Do you want to continue anyway? (y/N) " -n 1 -r
+    echo
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        exit 1
+    fi
+fi
+
 # Ensure common chezmoi installation locations are in PATH
 export PATH="$HOME/bin:$HOME/.local/bin:$PATH"
 
