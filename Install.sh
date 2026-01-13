@@ -27,7 +27,9 @@ if ! command -v chezmoi &>/dev/null; then
         *)
             # Fallback to binary install
             echo "📥 Installing chezmoi binary..."
-            sh -c "$(curl -fsLS get.chezmoi.io)"
+            # Install to $HOME/bin explicitly
+            mkdir -p "$HOME/bin"
+            sh -c "$(curl -fsLS get.chezmoi.io)" -- -b "$HOME/bin"
             ;;
     esac
 else
