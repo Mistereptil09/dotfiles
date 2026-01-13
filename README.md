@@ -18,8 +18,9 @@ Personal dotfiles repository managed with [chezmoi](https://www.chezmoi.io/), fe
 
 ## Prerequisites
 - Linux (Fedora, Debian/Ubuntu, or Arch)
-- `curl` and `git` installed
 - `sudo` access for package installation
+
+**Note:** The installation script will automatically install `zsh`, `git`, `curl`, and `chezmoi` for you on supported distributions.
 
 ---
 

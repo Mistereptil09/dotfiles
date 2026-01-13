@@ -6,12 +6,32 @@ REPO_URL="https://github.com/Mistereptil09/dotfiles.git"
 # Ensure common chezmoi installation locations are in PATH
 export PATH="$HOME/bin:$HOME/.local/bin:$PATH"
 
+# Detect OS once
+OS_NAME=$(. /etc/os-release && echo "$ID")
+
+echo "📦 Installing essential packages..."
+case "$OS_NAME" in
+    fedora)
+        echo "➡️ Installing zsh and dependencies on Fedora..."
+        sudo dnf install -y zsh git curl
+        ;;
+    debian|ubuntu)
+        echo "➡️ Installing zsh and dependencies on Debian/Ubuntu..."
+        sudo apt-get update
+        sudo apt-get install -y zsh git curl
+        ;;
+    arch|manjaro)
+        echo "➡️ Installing zsh and dependencies on Arch..."
+        sudo pacman -S --noconfirm zsh git curl
+        ;;
+    *)
+        echo "⚠️  Unknown distribution. Please install zsh, git, and curl manually."
+        ;;
+esac
+
 echo "📦 Checking for chezmoi..."
 if ! command -v chezmoi &>/dev/null; then
     echo "➡️ Installing chezmoi..."
-    
-    # Detect OS
-    OS_NAME=$(. /etc/os-release && echo "$ID")
     
     case "$OS_NAME" in
         fedora)
