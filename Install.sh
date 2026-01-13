@@ -25,16 +25,21 @@ if ! command -v chezmoi &>/dev/null; then
             # Fallback to binary install
             echo "📥 Installing chezmoi binary..."
             sh -c "$(curl -fsLS get.chezmoi.io)"
-            # Add chezmoi to PATH for this session
-            export PATH="$HOME/bin:$PATH"
             ;;
     esac
 else
     echo "✅ chezmoi already installed"
 fi
 
-# Ensure chezmoi is in PATH
+# Ensure chezmoi is in PATH (common installation locations)
 export PATH="$HOME/bin:$HOME/.local/bin:$PATH"
+
+# Verify chezmoi is now accessible
+if ! command -v chezmoi &>/dev/null; then
+    echo "❌ Error: chezmoi installation failed or not in PATH"
+    echo "Please install chezmoi manually: https://www.chezmoi.io/install/"
+    exit 1
+fi
 
 echo "📂 Setting up dotfiles with chezmoi..."
 if [ ! -d "$HOME/.local/share/chezmoi" ]; then
