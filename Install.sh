@@ -2,49 +2,172 @@
 set -e  # exit on error
 
 REPO_URL="https://github.com/Mistereptil09/dotfiles.git"
-BOOTSTRAP="$HOME/.config/yadm/bootstrap"
 
-echo "📦 Checking for yadm..."
-if ! command -v yadm &>/dev/null; then
-    echo "➡️ Installing yadm..."
-    if command -v dnf &>/dev/null; then
-        TMPDIR=/tmp sudo dnf config-manager addrepo --from-repofile=https://download.opensuse.org/repositories/home:TheLocehiliosan:yadm/Fedora_42/home:TheLocehiliosan:yadm.repo
-        sudo dnf install -y yadm
-    else
-        echo "❌ Package manager not supported. Please install yadm manually."
+# Check if running inside Flatpak
+if [[ -n "$FLATPAK_ID" ]] || [[ "$HOME" == *"/.var/app/"* ]]; then
+    echo "⚠️  WARNING: This script appears to be running inside a Flatpak application."
+    echo "Dotfiles installed from within Flatpak will only affect the Flatpak's isolated environment."
+    echo ""
+    echo "To install dotfiles for your system:"
+    echo "  1. Exit the Flatpak application"
+    echo "  2. Open a regular terminal (not from Flatpak)"
+    echo "  3. Run this script again from there"
+    echo ""
+    read -p "Do you want to continue anyway? (y/N) " -n 1 -r
+    echo
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
         exit 1
     fi
-else
-    echo "✅ yadm already installed"
 fi
 
-echo "📂 Setting up dotfiles..."
-if [ ! -d "$HOME/.local/share/yadm/repo.git" ]; then
-    yadm clone "$REPO_URL"
+# Ensure common chezmoi installation locations are in PATH
+export PATH="$HOME/bin:$HOME/.local/bin:$PATH"
+
+# Detect OS and package manager
+if [[ -f /etc/os-release ]]; then
+    . /etc/os-release
+    OS_NAME="$ID"
+    OS_ID_LIKE="${ID_LIKE:-}"
 else
-    echo "🔄 Repo already cloned, pulling latest..."
-    yadm pull
+    echo "❌ Error: Cannot detect OS (missing /etc/os-release)"
+    exit 1
 fi
 
-# Check OS before running bootstrap
-OS_NAME=$(. /etc/os-release && echo "$ID")
-if [ "$OS_NAME" != "fedora" ]; then
-    echo "⚠️  Bootstrap is only supported on Fedora."
-    echo "Skipping bootstrap run."
-else
-    if [ -f "$BOOTSTRAP" ]; then
-        read -p "🚀 Do you want to run the bootstrap script now? (y/N): " RUN_BOOTSTRAP
-        RUN_BOOTSTRAP=${RUN_BOOTSTRAP,,}  # convert to lowercase
-        if [[ "$RUN_BOOTSTRAP" == "y" || "$RUN_BOOTSTRAP" == "yes" ]]; then
-            chmod +x "$BOOTSTRAP"
-            yadm bootstrap
-            echo "✅ Bootstrap completed!"
-        else
-            echo "⚠️ Skipping bootstrap."
-        fi
+# Function to detect package manager
+detect_package_manager() {
+    if command -v apt-get &>/dev/null; then
+        echo "apt"
+    elif command -v dnf &>/dev/null; then
+        echo "dnf"
+    elif command -v pacman &>/dev/null; then
+        echo "pacman"
     else
-        echo "⚠️ No bootstrap script found at $BOOTSTRAP"
+        echo "unknown"
     fi
+}
+
+echo "📦 Installing essential packages..."
+
+# Try to match known distros first, then fall back to ID_LIKE, then detect package manager
+INSTALL_METHOD=""
+case "$OS_NAME" in
+    fedora|rhel|centos)
+        INSTALL_METHOD="dnf"
+        ;;
+    debian|ubuntu|pop|linuxmint|elementary|zorin)
+        INSTALL_METHOD="apt"
+        ;;
+    arch|manjaro|endeavouros)
+        INSTALL_METHOD="pacman"
+        ;;
+    *)
+        # Check ID_LIKE for derivative distros
+        if [[ "$OS_ID_LIKE" == *"debian"* ]] || [[ "$OS_ID_LIKE" == *"ubuntu"* ]]; then
+            INSTALL_METHOD="apt"
+        elif [[ "$OS_ID_LIKE" == *"fedora"* ]] || [[ "$OS_ID_LIKE" == *"rhel"* ]]; then
+            INSTALL_METHOD="dnf"
+        elif [[ "$OS_ID_LIKE" == *"arch"* ]]; then
+            INSTALL_METHOD="pacman"
+        else
+            # Final fallback: detect package manager
+            DETECTED_PM=$(detect_package_manager)
+            if [[ "$DETECTED_PM" != "unknown" ]]; then
+                INSTALL_METHOD="$DETECTED_PM"
+                echo "⚠️  Unknown distribution ($OS_NAME), proceeding with $DETECTED_PM package manager support."
+            fi
+        fi
+        ;;
+esac
+
+# Install packages based on detected method
+APT_UPDATED=false
+case "$INSTALL_METHOD" in
+    dnf)
+        echo "➡️ Installing zsh and dependencies using dnf..."
+        sudo dnf install -y zsh git curl
+        ;;
+    apt)
+        echo "➡️ Installing zsh and dependencies using apt..."
+        sudo apt-get update
+        APT_UPDATED=true
+        sudo apt-get install -y zsh git curl
+        ;;
+    pacman)
+        echo "➡️ Installing zsh and dependencies using pacman..."
+        sudo pacman -S --noconfirm zsh git curl
+        ;;
+    *)
+        echo "⚠️  Could not detect a supported package manager."
+        echo "Distribution: $OS_NAME"
+        if [[ -n "$OS_ID_LIKE" ]]; then
+            echo "Based on: $OS_ID_LIKE"
+        fi
+        echo ""
+        echo "Please install the following packages manually:"
+        echo "  - zsh"
+        echo "  - git"
+        echo "  - curl"
+        echo ""
+        echo "Then run this script again."
+        exit 1
+        ;;
+esac
+
+# Verify essential packages are installed
+if ! command -v zsh &>/dev/null; then
+    echo "❌ Error: zsh is not installed. Please install it manually."
+    exit 1
+fi
+
+echo "📦 Checking for chezmoi..."
+if ! command -v chezmoi &>/dev/null; then
+    echo "➡️ Installing chezmoi..."
+    
+    case "$INSTALL_METHOD" in
+        dnf)
+            sudo dnf install -y chezmoi
+            ;;
+        apt)
+            if [[ "$APT_UPDATED" != "true" ]]; then
+                sudo apt-get update
+            fi
+            sudo apt-get install -y chezmoi
+            ;;
+        pacman)
+            sudo pacman -S --noconfirm chezmoi
+            ;;
+        *)
+            # Fallback to binary install
+            echo "📥 Installing chezmoi binary..."
+            # Install to $HOME/bin explicitly
+            mkdir -p "$HOME/bin"
+            sh -c "$(curl -fsLS get.chezmoi.io)" -- -b "$HOME/bin"
+            ;;
+    esac
+else
+    echo "✅ chezmoi already installed"
+fi
+
+# Verify chezmoi is now accessible
+if ! command -v chezmoi &>/dev/null; then
+    echo "❌ Error: chezmoi installation failed or not in PATH"
+    echo "Please install chezmoi manually: https://www.chezmoi.io/install/"
+    exit 1
+fi
+
+echo "📂 Setting up dotfiles with chezmoi..."
+if [ ! -d "$HOME/.local/share/chezmoi" ]; then
+    chezmoi init "$REPO_URL"
+    echo "🔄 Applying dotfiles..."
+    chezmoi apply
+else
+    echo "🔄 Dotfiles already initialized, pulling latest..."
+    chezmoi update
 fi
 
 echo "🎉 Installation complete!"
+echo ""
+echo "📝 Next steps:"
+echo "  1. Restart your terminal or log out and back in"
+echo "  2. Set Zsh as your default shell: chsh -s \$(which zsh)"
+echo "  3. Customize your setup by editing ~/.config/zsh/conf.d/99-local.zsh"
