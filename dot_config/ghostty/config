@@ -1,0 +1,44 @@
+# ─── Font Configuration ──────────────────────────────────────────────────────
+font-family = JetBrains Mono Nerd Font
+font-size = 12.5
+
+# ─── Tokyo Night Color Scheme ────────────────────────────────────────────────
+foreground = c0caf5
+background = 1a1b26
+selection-foreground = 1a1b26
+selection-background = c0caf5
+cursor-color = ffcc00
+
+# Black        Red         Green       Yellow      Blue        Magenta     Cyan        White
+palette = 0=#1a1b26
+palette = 1=#f7768e
+palette = 2=#9ece6a
+palette = 3=#e0af68
+palette = 4=#7aa2f7
+palette = 5=#bb9af7
+palette = 6=#7dcfff
+palette = 7=#c0caf5
+# Bright
+palette = 8=#414868
+palette = 9=#f7768e
+palette = 10=#9ece6a
+palette = 11=#e0af68
+palette = 12=#7aa2f7
+palette = 13=#bb9af7
+palette = 14=#7dcfff
+palette = 15=#a9b1d6
+
+# ─── Window Settings ─────────────────────────────────────────────────────────
+window-padding-x = 4
+window-padding-y = 4
+window-decoration = false
+background-opacity = 0.95
+
+# ─── Scrollback & Behavior ───────────────────────────────────────────────────
+scrollback-limit = 10000
+copy-on-select = true
+mouse-hide-while-typing = true
+
+# ─── Shell Integration ───────────────────────────────────────────────────────
+shell-integration = zsh
+command = /usr/bin/zsh
