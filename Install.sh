@@ -7,8 +7,14 @@ REPO_URL="https://github.com/Mistereptil09/dotfiles.git"
 export PATH="$HOME/bin:$HOME/.local/bin:$PATH"
 
 # Detect OS and package manager
-OS_NAME=$(. /etc/os-release && echo "$ID")
-OS_ID_LIKE=$(. /etc/os-release && echo "${ID_LIKE:-}")
+if [[ -f /etc/os-release ]]; then
+    . /etc/os-release
+    OS_NAME="$ID"
+    OS_ID_LIKE="${ID_LIKE:-}"
+else
+    echo "❌ Error: Cannot detect OS (missing /etc/os-release)"
+    exit 1
+fi
 
 # Function to detect package manager
 detect_package_manager() {
@@ -50,13 +56,14 @@ case "$OS_NAME" in
             DETECTED_PM=$(detect_package_manager)
             if [[ "$DETECTED_PM" != "unknown" ]]; then
                 INSTALL_METHOD="$DETECTED_PM"
-                echo "⚠️  Unknown distribution ($OS_NAME), but detected $DETECTED_PM package manager."
+                echo "⚠️  Unknown distribution ($OS_NAME), proceeding with $DETECTED_PM package manager support."
             fi
         fi
         ;;
 esac
 
 # Install packages based on detected method
+APT_UPDATED=false
 case "$INSTALL_METHOD" in
     dnf)
         echo "➡️ Installing zsh and dependencies using dnf..."
@@ -65,6 +72,7 @@ case "$INSTALL_METHOD" in
     apt)
         echo "➡️ Installing zsh and dependencies using apt..."
         sudo apt-get update
+        APT_UPDATED=true
         sudo apt-get install -y zsh git curl
         ;;
     pacman)
@@ -103,7 +111,9 @@ if ! command -v chezmoi &>/dev/null; then
             sudo dnf install -y chezmoi
             ;;
         apt)
-            sudo apt-get update
+            if [[ "$APT_UPDATED" != "true" ]]; then
+                sudo apt-get update
+            fi
             sudo apt-get install -y chezmoi
             ;;
         pacman)
