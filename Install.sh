@@ -3,6 +3,9 @@ set -e  # exit on error
 
 REPO_URL="https://github.com/Mistereptil09/dotfiles.git"
 
+# Ensure common chezmoi installation locations are in PATH
+export PATH="$HOME/bin:$HOME/.local/bin:$PATH"
+
 echo "📦 Checking for chezmoi..."
 if ! command -v chezmoi &>/dev/null; then
     echo "➡️ Installing chezmoi..."
@@ -30,9 +33,6 @@ if ! command -v chezmoi &>/dev/null; then
 else
     echo "✅ chezmoi already installed"
 fi
-
-# Ensure chezmoi is in PATH (common installation locations)
-export PATH="$HOME/bin:$HOME/.local/bin:$PATH"
 
 # Verify chezmoi is now accessible
 if ! command -v chezmoi &>/dev/null; then
