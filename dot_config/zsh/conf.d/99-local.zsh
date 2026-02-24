@@ -1,0 +1,8 @@
+# ─── Local Customizations ─────────────────────────────────────────────────────
+# This file is managed by chezmoi and is intended for machine-specific customizations.
+# Add any custom aliases, functions, or environment variables here that are unique
+# to this machine and should not be shared across all your systems.
+
+# Examples:
+# export CUSTOM_VAR="value"
+# alias custom_alias='command'

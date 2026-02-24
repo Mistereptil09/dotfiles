@@ -8,3 +8,6 @@ fi
 
 # Source zinit
 source "${ZINIT_HOME}/zinit.zsh"
+
+# Defers execution of commands until prompt is shown, speeds up startup
+zinit light romkatv/zsh-defer
